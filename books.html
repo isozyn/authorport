@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Books | Jane Doe</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Load Shared Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- Main: Books Section Only -->
+  <main class="container">
+    <section class="books-section">
+      <h1>My Books</h1>
+      <p>A collection of literary works exploring memory, identity, and the quiet moments that shape us.</p>
+
+      <div class="books-grid">
+        <div class="book-item">
+          <img src="images/book1-cover.jpg" alt="The Silent Shore" />
+          <h3>The Silent Shore</h3>
+          <p class="book-year">2022</p>
+          <p>A haunting tale of loss and rediscovery along the northern coast. Winner of the 2023 Literary Arts Prize.</p>
+        </div>
+
+        <div class="book-item">
+          <img src="images/book2-cover.jpg" alt="Where the Light Falls" />
+          <h3>Where the Light Falls</h3>
+          <p class="book-year">2019</p>
+          <p>A luminous novel about art, exile, and the enduring power of human connection across generations.</p>
+        </div>
+
+        <div class="book-item">
+          <img src="images/book3-cover.jpg" alt="The Quiet Between" />
+          <h3>The Quiet Between</h3>
+          <p class="book-year">2016</p>
+          <p>Her debut novel, praised for its lyrical prose and emotional depth. Translated into 18 languages.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" title="Go to top">↑</button>
+
+  <!-- Load Header & Scripts -->
+  <script>
+    fetch('partials/header.html')
+      .then(r => r.text())
+      .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+        const hamburger = document.getElementById('hamburger');
+        const navbar = document.getElementById('navbar');
+        hamburger?.addEventListener('click', () => {
+          navbar.classList.toggle('show');
+        });
+      });
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('backToTop');
+      btn.style.opacity = window.pageYOffset > 300 ? '1' : '0';
+    });
+    document.getElementById('backToTop')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
