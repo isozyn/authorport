@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact | Jane Doe</title>
+  <title>Contact | J K Rowling</title>
   <link rel="stylesheet" href="css/style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -52,32 +52,6 @@
   <button id="backToTop" title="Go to top">↑</button>
 
   <!-- Load Header & Scripts -->
-  <script>
-    fetch('partials/header.html')
-      .then(r => r.text())
-      .then(data => {
-        document.getElementById('header-placeholder').innerHTML = data;
-        const hamburger = document.getElementById('hamburger');
-        const navbar = document.getElementById('navbar');
-        hamburger?.addEventListener('click', () => {
-          navbar.classList.toggle('show');
-        });
-      });
-
-    window.addEventListener('scroll', () => {
-      const btn = document.getElementById('backToTop');
-      btn.style.opacity = window.pageYOffset > 300 ? '1' : '0';
-    });
-    document.getElementById('backToTop')?.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Simulate form submission
-    document.getElementById('contactForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Thank you for your message. It has been sent.');
-      e.target.reset();
-    });
-  </script>
+  <script src="src/main.js"></script>
 </body>
 </html>

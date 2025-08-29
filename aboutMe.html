@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Jane Doe | Author</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Load Shared Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- Main: About Section -->
+  <main class="container about-page">
+    <section class="about-author">
+      <div class="author-header">
+        <h1>About Jane Doe</h1>
+        <p class="subtitle">A voice for the quiet spaces between memory and meaning</p>
+      </div>
+
+      <div class="about-content">
+        <img src="images/author.jpg" alt="Jane Doe, Author" class="portrait" />
+
+        <div class="bio-text">
+          <p>
+            Jane Doe is an acclaimed novelist and essayist whose work explores the delicate interplay between memory, identity, and place. With a lyrical precision and emotional depth, her stories illuminate the moments we often overlook — a glance across a room, the weight of silence, the return of a forgotten scent.
+          </p>
+
+          <p>
+            Her debut novel, <em>The Quiet Between</em>, was praised by critics for its “haunting stillness and profound empathy” and has since been translated into 18 languages. It was shortlisted for the National Book Critics Circle Award and named a <em>New York Times</em> Notable Book of the Year.
+          </p>
+
+          <p>
+            Jane holds a Master’s in Classical Literature from the University of Edinburgh and an MFA in Creative Writing from Columbia University. She has taught writing at the university level and led workshops at literary festivals across Europe and North America.
+          </p>
+
+          <p>
+            When not writing, she divides her time between a coastal village in Maine and a small apartment in Edinburgh, drawing inspiration from the tides, the archives, and long walks with no destination.
+          </p>
+        </div>
+      </div>
+
+      <div class="author-quote">
+        <blockquote>
+          “We are not shaped by the loud events alone, but by the quiet ones we carry in silence.”
+          <cite>— Jane Doe</cite>
+        </blockquote>
+      </div>
+
+      <div class="author-philosophy">
+        <h2>My Writing</h2>
+        <p>
+          I write to understand what cannot be said — the grief that lingers in a half-empty house, the joy hidden in a stranger’s smile, the way a single sentence from a childhood book can return decades later like a compass.
+        </p>
+        <p>
+          My novels are not built on spectacle, but on stillness. They are for readers who listen closely, who feel the weight of a pause, and who believe that truth often lives in the spaces between words.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" title="Go to top">↑</button>
+
+  <!-- Load Header & Scripts -->
+  <script>
+    fetch('partials/header.html')
+      .then(r => r.text())
+      .then(data => {
+        document.getElementById('header-placeholder').innerHTML = data;
+        const hamburger = document.getElementById('hamburger');
+        const navbar = document.getElementById('navbar');
+        hamburger?.addEventListener('click', () => {
+          navbar.classList.toggle('show');
+        });
+      });
+
+    // Back to top button
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('backToTop');
+      btn.style.opacity = window.pageYOffset > 300 ? '1' : '0';
+    });
+
+    document.getElementById('backToTop')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
