@@ -109,30 +109,49 @@ nav a:hover {
   font-style: italic;
 }
 
-/* Flex container for image and text side by side */
-.about-content {
+/* Change .about-content to .author-content to match HTML */
+.author-content {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 2rem;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 2.5rem;
 }
 
+
+/* Update the portrait class */
 .portrait {
   width: 250px;
   height: 350px;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0; /* Prevent shrinking of image */
+  flex: 0 0 auto;  /* Add this line */
 }
 
+/* Update the bio-text class */
 .bio-text {
   flex: 1;
-  min-width: 300px;
+  min-width: 0;  /* Change from 300px to 0 */
   line-height: 1.7;
   color: #34495e;
   font-size: 1rem;
+}
+
+/* Update the media query for mobile */
+@media (max-width: 768px) {
+  .about-content {
+    flex-wrap: wrap;  /* Allow wrapping on mobile */
+  }
+  
+  .portrait {
+    margin: 0 auto;  /* Center the image on mobile */
+  }
+
+  .bio-text {
+    text-align: center;
+    min-width: 100%;  /* Take full width on mobile */
+  }
 }
 
 .bio-text p {
