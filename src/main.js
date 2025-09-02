@@ -326,12 +326,26 @@ async function initBooksPage() {
     const titleDisplay = currentQuery ? highlightSearchTerm(book.title, currentQuery) : book.title;
     const descriptionDisplay = currentQuery ? highlightSearchTerm(description, currentQuery) : description;
 
+    // Create Amazon search URL
+    const amazonSearchQuery = encodeURIComponent(`${book.title} J.K. Rowling`);
+    const amazonUrl = `https://www.amazon.com/s?k=${amazonSearchQuery}&i=stripbooks&ref=nb_sb_noss`;
+
     bookDiv.innerHTML = `
       <img src="${coverUrl}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/300x450/f0f0f0/666?text=No+Cover'">
       <h3>${titleDisplay}</h3>
       <p class="book-year">${book.first_publish_year || 'Unknown'}</p>
       <p class="book-description">${descriptionDisplay}</p>
       ${subjectsHtml}
+      <div class="book-actions">
+        <button class="details-btn" onclick="showBookDetails(${JSON.stringify(book).replace(/"/g, '&quot;')})">
+          <span class="details-icon">ℹ️</span>
+          View Details
+        </button>
+        <a href="${amazonUrl}" target="_blank" rel="noopener noreferrer" class="buy-btn amazon-btn">
+          <span class="amazon-icon">📚</span>
+          Buy on Amazon
+        </a>
+      </div>
     `;
 
     return bookDiv;
@@ -375,6 +389,156 @@ async function initBooksPage() {
     });
   }
 }
+
+// ========== BOOK DETAILS MODAL ==========
+function showBookDetails(book) {
+  // Create modal if it doesn't exist
+  let modal = document.getElementById('bookModal');
+  if (!modal) {
+    modal = createBookModal();
+    document.body.appendChild(modal);
+  }
+
+  // Populate modal with book details
+  populateBookModal(book);
+  
+  // Show modal
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function createBookModal() {
+  const modal = document.createElement('div');
+  modal.id = 'bookModal';
+  modal.className = 'book-modal';
+  
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeBookModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeBookModal()">&times;</button>
+      <div class="modal-body">
+        <div class="modal-image">
+          <img id="modalBookCover" src="" alt="Book Cover">
+        </div>
+        <div class="modal-info">
+          <h2 id="modalBookTitle"></h2>
+          <p class="modal-author">by J.K. Rowling</p>
+          <div class="modal-details">
+            <div class="detail-item">
+              <strong>Publication Year:</strong>
+              <span id="modalBookYear"></span>
+            </div>
+            <div class="detail-item">
+              <strong>First Published:</strong>
+              <span id="modalFirstPublished"></span>
+            </div>
+            <div class="detail-item" id="modalLanguageContainer">
+              <strong>Languages:</strong>
+              <span id="modalLanguages"></span>
+            </div>
+            <div class="detail-item" id="modalPublisherContainer">
+              <strong>Publishers:</strong>
+              <span id="modalPublishers"></span>
+            </div>
+            <div class="detail-item" id="modalSubjectsContainer">
+              <strong>Subjects:</strong>
+              <div id="modalSubjects" class="modal-subjects"></div>
+            </div>
+            <div class="detail-item" id="modalDescriptionContainer">
+              <strong>Description:</strong>
+              <p id="modalDescription"></p>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <a id="modalAmazonLink" href="" target="_blank" rel="noopener noreferrer" class="buy-btn amazon-btn">
+              <span class="amazon-icon">📚</span>
+              Buy on Amazon
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  return modal;
+}
+
+function populateBookModal(book) {
+  // Cover image
+  const coverId = book.cover_i;
+  const coverUrl = coverId 
+    ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`
+    : 'https://via.placeholder.com/400x600/f0f0f0/666?text=No+Cover';
+  
+  document.getElementById('modalBookCover').src = coverUrl;
+  document.getElementById('modalBookTitle').textContent = book.title;
+  document.getElementById('modalBookYear').textContent = book.first_publish_year || 'Unknown';
+  document.getElementById('modalFirstPublished').textContent = book.first_publish_year || 'Unknown';
+  
+  // Languages
+  const languageContainer = document.getElementById('modalLanguageContainer');
+  if (book.language && book.language.length > 0) {
+    document.getElementById('modalLanguages').textContent = book.language.slice(0, 5).join(', ');
+    languageContainer.style.display = 'block';
+  } else {
+    languageContainer.style.display = 'none';
+  }
+  
+  // Publishers
+  const publisherContainer = document.getElementById('modalPublisherContainer');
+  if (book.publisher && book.publisher.length > 0) {
+    document.getElementById('modalPublishers').textContent = book.publisher.slice(0, 3).join(', ');
+    publisherContainer.style.display = 'block';
+  } else {
+    publisherContainer.style.display = 'none';
+  }
+  
+  // Subjects
+  const subjectsContainer = document.getElementById('modalSubjectsContainer');
+  const subjectsDiv = document.getElementById('modalSubjects');
+  if (book.subject && book.subject.length > 0) {
+    subjectsDiv.innerHTML = book.subject.slice(0, 10).map(subject => 
+      `<span class="subject-tag">${subject}</span>`
+    ).join('');
+    subjectsContainer.style.display = 'block';
+  } else {
+    subjectsContainer.style.display = 'none';
+  }
+  
+  // Description
+  const descriptionContainer = document.getElementById('modalDescriptionContainer');
+  let description = '';
+  if (book.subtitle) {
+    description = book.subtitle;
+  } else if (book.subject && book.subject.length > 0) {
+    description = `A captivating work exploring themes of ${book.subject.slice(0, 3).join(', ')}.`;
+  } else {
+    description = 'A captivating work by J.K. Rowling that has enchanted readers worldwide.';
+  }
+  
+  document.getElementById('modalDescription').textContent = description;
+  descriptionContainer.style.display = 'block';
+  
+  // Amazon link
+  const amazonSearchQuery = encodeURIComponent(`${book.title} J.K. Rowling`);
+  const amazonUrl = `https://www.amazon.com/s?k=${amazonSearchQuery}&i=stripbooks&ref=nb_sb_noss`;
+  document.getElementById('modalAmazonLink').href = amazonUrl;
+}
+
+function closeBookModal() {
+  const modal = document.getElementById('bookModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore background scrolling
+  }
+}
+
+// Close modal when pressing Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeBookModal();
+  }
+});
 
 // ========== FORM HANDLER ==========
 function initContactForm(formId = 'contactForm') {
